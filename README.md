@@ -45,3 +45,9 @@ Bu proje, bir diş kliniğinin veritabanını oluşturmak ve yönetmek amacıyla
 *	1 adet ER diyagramı
 *	85 adet tablolarla ilişkili sorgu (query)
 *	Veri girişleri
+
+## Katkıda Bulunma (Give a star)
+Eğer bu projeyi beğendiyseniz ve gelecekte güncellemelerden haberdar olmak istiyorsanız, lütfen projemize "star" vermekten çekinmeyin.
+Eğer bu projeye katkıda bulunmak isterseniz, lütfen bir "fork" oluşturun ve pull request gönderin.
+
+Destekleriniz için teşekkür ederim!

@@ -1,5 +1,3 @@
-CREATE DATABASE  VERÝ_TABANI
-
 CREATE TABLE doktor
 (
 doktor_id   INTEGER     NOT NULL,
@@ -7,11 +5,11 @@ ad          VARCHAR(30) NOT NULL,
 soyad       VARCHAR(30) NOT NULL,
 cinsiyet    CHAR(1)     NOT NULL,
 doktor_maas INTEGER     NOT NULL,
-uzmanlýk    VARCHAR(30) NOT NULL,
+uzmanlik    VARCHAR(30) NOT NULL,
 
 PRIMARY KEY (doktor_id),
 CHECK (cinsiyet = 'E' OR cinsiyet = 'K'),
-CHECK (uzmanlýk IN ('Ortodonti','Periodontoloji','Aðýz-Diþ ve Çene Cerrahisi','Endodonti','Protez'))
+CHECK (uzmanlik IN ('Ortodonti','Periodontoloji','AÄŸÄ±z-DiÅŸ ve Ã‡ene Cerrahisi','Endodonti','Protez'))
 );
 
 
@@ -70,7 +68,7 @@ muayene_id     INTEGER     NOT NULL,
 doktor_id      INTEGER     NOT NULL,
 teknisyen_id   INTEGER     NOT NULL,
 hasta_id       INTEGER     NOT NULL,
-teþhis_id      INTEGER     NOT NULL ,
+teÃ¾his_id      INTEGER     NOT NULL ,
 muayene_tarihi DATE        NOT NULL,
 muayene_saati  VARCHAR(10) NOT NULL,
 
@@ -93,19 +91,19 @@ PRIMARY KEY (ilac_id)
 );
 
 
-CREATE TABLE teþhis
+CREATE TABLE teÅŸhis
 (
-Teþhis_id INTEGER     NOT NULL,
+TeÅŸhis_id INTEGER     NOT NULL,
 ilac_id   INTEGER     NOT NULL,
 hasta_id  INTEGER     NOT NULL,
 doktor_id INTEGER     NOT NULL,
 tedavi    VARCHAR(30) NOT NULL,
 
-PRIMARY KEY (teþhis_id),
-CONSTRAINT teþhis_fk4 FOREIGN KEY (hasta_id) REFERENCES hasta (hasta_id),
-CONSTRAINT teþhis_fk2 FOREIGN KEY (doktor_id)REFERENCES doktor(doktor_id),
-CONSTRAINT teþhis_fk3 FOREIGN KEY (ilac_id)  REFERENCES ilac  (ilac_id),
-CHECK (tedavi IN ('Diþ Eti Hastalýðý','Protez Diþ Tedavisi','Tel Tedavisi','Dolgu Tedavisi','Diþ Beyazlatma','Diþ çekimi','Kanal Tedavisi','Ýmplant'))
+PRIMARY KEY (teÅŸhis_id),
+CONSTRAINT teÅŸhis_fk4 FOREIGN KEY (hasta_id) REFERENCES hasta (hasta_id),
+CONSTRAINT teÅŸhis_fk2 FOREIGN KEY (doktor_id)REFERENCES doktor(doktor_id),
+CONSTRAINT teÅŸhis_fk3 FOREIGN KEY (ilac_id)  REFERENCES ilac  (ilac_id),
+CHECK (tedavi IN ('DiÅŸ Eti HastalÄ±ÄŸÄ±','Protez DiÃ¾ Tedavisi','Tel Tedavisi','Dolgu Tedavisi','DiÅŸ Beyazlatma','DiÅŸ Ã§ekimi','Kanal Tedavisi','implant'))
 );
 
 
@@ -147,10 +145,10 @@ fatura_id    INTEGER NOT NULL,
 odeme_durumu VARCHAR(30),
 odeme_tipi   VARCHAR(30),
 odeme_tarihi DATE ,
-odeme_tutarý FLOAT   NOT NULL ,
+odeme_tutari FLOAT   NOT NULL ,
 
 PRIMARY KEY (odeme_id),
 CONSTRAINT odeme_fk FOREIGN KEY (fatura_id) REFERENCES fatura (fatura_id),
-CHECK (odeme_durumu = 'ödenmedi' OR odeme_durumu = 'bekleniyor' OR odeme_durumu = 'ödendi'),
+CHECK (odeme_durumu = 'Ã¶denmedi' OR odeme_durumu = 'bekleniyor' OR odeme_durumu = 'Ã¶dendi'),
 CHECK (odeme_tipi = 'Online Banka' OR odeme_tipi = 'Kart' OR odeme_tipi = 'Nakit')
 );

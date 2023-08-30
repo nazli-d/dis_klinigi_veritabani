@@ -47,7 +47,6 @@ Bu proje, bir diş kliniğinin veritabanını oluşturmak ve yönetmek amacıyla
 *	Veri girişleri
 
 ## Katkıda Bulunma (Give a star)
-Eğer bu projeyi beğendiyseniz ve gelecekte güncellemelerden haberdar olmak istiyorsanız, lütfen projemize "star" vermekten çekinmeyin.
-Eğer bu projeye katkıda bulunmak isterseniz, lütfen bir "fork" oluşturun ve pull request gönderin.
+Eğer bu projeyi beğendiyseniz ve gelecekte güncellemelerden haberdar olmak istiyorsanız, lütfen projeme "star" vermekten çekinmeyin. Katkıda bulunmak isterseniz de bir "fork" oluşturun ve pull request gönderin.
 
 Destekleriniz için teşekkür ederim!

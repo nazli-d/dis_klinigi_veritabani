@@ -5,7 +5,7 @@ AS
 BEGIN
     IF (EXISTS(SELECT * FROM INSERTED WHERE son_kullanma_tarihi < GETDATE())) 
 	BEGIN
-	   PRINT('ÝLACIN SON KULLANMA TARÝHÝ GEÇMÝÞ OLAMAZ!');
+	   PRINT('Ä°LACIN SON KULLANMA TARÄ°HÄ° GEÃ‡MÄ°Åž OLAMAZ!');
        ROLLBACK TRANSACTION;
     END 
 END
@@ -20,12 +20,12 @@ AS
 BEGIN
   IF (SELECT muayene_tarihi FROM inserted) < GETDATE()
   BEGIN
-    PRINT('MUAYENE TARÝHÝ BUGÜNÜN TARÝHÝ VEYA DAHA ÝLERÝSÝ OLMALIDIR!');
+    PRINT('MUAYENE TARÄ°HÄ° BUGÃœNÃœN TARÄ°HÄ° VEYA DAHA Ä°LERÄ°SÄ° OLMALIDIR!');
 	ROLLBACK TRANSACTION;
   END
 END;
 
-INSERT INTO muayene (muayene_id, doktor_id, teknisyen_id, hasta_id,teþhis_id, muayene_tarihi, muayene_saati) VALUES (489, 22, 112, 211,950,'2022-01-01', '08:30:00');
+INSERT INTO muayene (muayene_id, doktor_id, teknisyen_id, hasta_id,teÅŸhis_id, muayene_tarihi, muayene_saati) VALUES (489, 22, 112, 211,950,'2022-01-01', '08:30:00');
 
 
 CREATE TRIGGER tc_kimlik_kontrol
@@ -35,10 +35,10 @@ AS
 BEGIN
   IF EXISTS (SELECT * FROM hasta WHERE tc_kimlik = (SELECT tc_kimlik FROM inserted))
   BEGIN
-    PRINT('GÝRÝLEN TC KÝMLÝK NUMARASI DAHA ÖNCE KAYDEDÝLMÝÞ!');
+    PRINT('GÄ°RÄ°LEN TC KÄ°MLÄ°K NUMARASI DAHA Ã–NCE KAYDEDÄ°LMÄ°Åž!');
 	ROLLBACK TRANSACTION;
   END
 END;
 
 INSERT INTO hasta (hasta_id, doktor_id, teknisyen_id, ad, soyad, tc_kimlik, cinsiyet, tel_no, dogum_tarihi)
-VALUES (290, 10, 112, 'Sinan', 'Arýn', '13469728640', 'E', '05473297451', '1981-03-12');
+VALUES (290, 10, 112, 'Sinan', 'Arin', '13469728640', 'E', '05473297451', '1981-03-12');

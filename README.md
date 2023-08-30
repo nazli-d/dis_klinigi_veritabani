@@ -1,7 +1,7 @@
 ﻿# DİŞ KLİNİĞİ VERİ TABANI (DENTAL CLİNİC MANAGEMENT, HOSPİTAL MANAGEMENT)
 
 * Proje : Diş Kliniği veri tabanının modellenmesi
-* Kullanılan veri tabanı [Microsoft SQL SERVER 2019](https://www.microsoft.com/tr-tr/sql-server/sql-server-downloads) ' dir
+* Kullanılan veri tabanı [Microsoft SQL Server Management Studio 18](https://www.microsoft.com/tr-tr/sql-server/sql-server-downloads) ' dir
 * ER Diyagram Çizimi için [draw.io](https://app.diagrams.net/) kullanılmıştır.
 
 # Veri tabanı yapısı ve özellikleri

@@ -8,10 +8,10 @@ SELECT *FROM ilac
 SELECT *FROM recete
 SELECT *FROM fatura
 SELECT *FROM odeme
-SELECT *FROM te˛his
+SELECT *FROM te≈ühis
 
 
---ADI A HARF› ›LE BAﬁLAYAN HASTALARA BAKAN DOKTORLARIN MAAﬁLARININ ORTALAMASINI GET›R›R
+--ADI A HARFƒ∞ ƒ∞LE BA≈ûLAYAN HASTALARA BAKAN DOKTORLARIN MAA≈ûLARININ ORTALAMASINI GETƒ∞Rƒ∞R
 SELECT AVG(doktor_maas) AS ortalama
 FROM doktor
 WHERE doktor_id IN (
@@ -22,189 +22,183 @@ WHERE doktor_id IN (
 										FROM hasta
 										WHERE ad LIKE 'A%' ));
 
---'2023-01-01' AND '2023-12-31' ARASINDA ›MPLANT TEDAV›S› OLAN HASTALARIN B›LG›LER›N› G÷STER›R
+--'2023-01-01' AND '2023-12-31' ARASINDA ƒ∞MPLANT TEDAVƒ∞Sƒ∞ OLAN HASTALARIN Bƒ∞LGƒ∞LERƒ∞Nƒ∞ G√ñSTERƒ∞R
 SELECT hasta.hasta_id, hasta.ad, hasta.soyad
 FROM hasta 
 JOIN muayene ON hasta.hasta_id = muayene.hasta_id
-JOIN te˛his  ON muayene.te˛his_id = te˛his.te˛his_id
-WHERE te˛his.tedavi = 'implant' AND muayene.muayene_tarihi BETWEEN '2023-01-01' AND '2023-12-31';
+JOIN te≈ühis  ON muayene.te≈ühis_id = te≈ühis.te≈ühis_id
+WHERE te≈ühis.tedavi = 'implant' AND muayene.muayene_tarihi BETWEEN '2023-01-01' AND '2023-12-31';
 
--- HANG› ›LA« EN «OK RE«ETELEND›R›LM›ﬁT›R?
+-- HANGƒ∞ ƒ∞LA√á EN √áOK RE√áETELENDƒ∞Rƒ∞LMƒ∞≈ûTƒ∞R?
 SELECT ilac.ilac_id, COUNT(recete_id) AS recete_sayisi
 FROM recete
 JOIN ilac ON ilac.ilac_id = recete.ilac_id       
 GROUP BY ilac.ilac_id
 ORDER BY recete_sayisi DESC;
 
---HANG› DOKTORUN VERD›–› RE«ETELER›N ORTALAMA F›YATI EN Y‹KSEKT›R? 
+--HANGƒ∞ DOKTORUN VERDƒ∞ƒûƒ∞ RE√áETELERƒ∞N ORTALAMA Fƒ∞YATI EN Y√úKSEKTƒ∞R? 
 SELECT doktor_id, AVG(ilac.fiyat) AS ortalama_fiyat
 FROM recete
 JOIN ilac ON ilac.ilac_id = recete.ilac_id
 GROUP BY doktor_id
 ORDER BY ortalama_fiyat DESC;
 
---EN YAﬁLI HASTANIN ÷DEME B›LG›S›N› G÷STER›R
+--EN YA≈ûLI HASTANIN √ñDEME Bƒ∞LGƒ∞Sƒ∞Nƒ∞ G√ñSTERƒ∞R
 SELECT odeme_durumu
 FROM odeme 
 JOIN hasta ON odeme.hasta_id = hasta.hasta_id
 WHERE hasta.dogum_tarihi = (SELECT MIN(dogum_tarihi) FROM hasta);
 
---ADI 'BERFU OLAN HASTANIN NUMARASI ,TC K›ML›K B›LG›S› VE NE TEDAV›S› OLACA–INI G÷STEREN SORGU
-SELECT hasta.hasta_id, hasta.tc_kimlik, te˛his.tedavi
-FROM hasta INNER JOIN te˛his ON hasta.hasta_id = te˛his.hasta_id
+--ADI 'BERFU OLAN HASTANIN NUMARASI ,TC Kƒ∞MLƒ∞K Bƒ∞LGƒ∞Sƒ∞ VE NE TEDAVƒ∞Sƒ∞ OLACAƒûINI G√ñSTEREN SORGU
+SELECT hasta.hasta_id, hasta.tc_kimlik, te≈ühis.tedavi
+FROM hasta INNER JOIN te≈ühis ON hasta.hasta_id = te≈ühis.hasta_id
 WHERE hasta.ad = 'Berfu';
 
---EN YAﬁLI OLAN HASTA VE ÷DEME DURUMUNU YAZDIRAN SORGU   
+--EN YA≈ûLI OLAN HASTA VE √ñDEME DURUMUNU YAZDIRAN SORGU   
 SELECT odeme_durumu,hasta.ad,hasta.soyad
 FROM odeme 
 JOIN hasta ON odeme.hasta_id = hasta.hasta_id
 WHERE  hasta.dogum_tarihi = (SELECT MIN(dogum_tarihi) FROM hasta);
 
-
-
---ADI NAZLI OLAN DOKTORUN MUAYENE ETT›–› HASTALARIN ORTALAMA YAﬁINI HESAPLAR
-SELECT AVG(YEAR(GETDATE()) - YEAR(hasta.dogum_tarihi)) AS ort_ya˛
+--ADI NAZLI OLAN DOKTORUN MUAYENE ETTƒ∞ƒûƒ∞ HASTALARIN ORTALAMA YA≈ûINI HESAPLAR
+SELECT AVG(YEAR(GETDATE()) - YEAR(hasta.dogum_tarihi)) AS ort_ya√æ
 FROM hasta
 JOIN muayene ON hasta.hasta_id = muayene.hasta_id
 JOIN doktor ON muayene.doktor_id = doktor.doktor_id
-WHERE doktor.ad = 'Nazl˝';
+WHERE doktor.ad = 'Nazlƒ±';
 
---D›ﬁ ET› HASTALI–I TEDAV›S› YAPTIRAN HASTALARIN FATURA B›LG›LER›N› GET›R›R
+--Dƒ∞≈û ETƒ∞ HASTALIƒûI TEDAVƒ∞Sƒ∞ YAPTIRAN HASTALARIN FATURA Bƒ∞LGƒ∞LERƒ∞Nƒ∞ GETƒ∞Rƒ∞R
 SELECT hasta.ad, hasta.soyad, fatura.fatura_tarihi, fatura.tutar
 FROM hasta
-JOIN te˛his ON hasta.hasta_id = te˛his.hasta_id
+JOIN te≈ühis ON hasta.hasta_id = te≈ühis.hasta_id
 JOIN fatura ON hasta.hasta_id = fatura.hasta_id
-WHERE te˛his.tedavi = 'Di˛ eti hastal˝˝';
+WHERE te≈ühis.tedavi = 'Di≈ü eti hastalƒ±ƒüƒ±';
 
---T‹M DOKTORLARIN MUAYENE ETT›–› HASTALARIN ORTALAMA YAﬁLARI
-SELECT doktor.ad, AVG(YEAR(GETDATE()) - YEAR(hasta.dogum_tarihi))  AS ort_ya˛
+--T√úM DOKTORLARIN MUAYENE ETTƒ∞ƒûƒ∞ HASTALARIN ORTALAMA YA√ûLARI
+SELECT doktor.ad, AVG(YEAR(GETDATE()) - YEAR(hasta.dogum_tarihi))  AS ort_ya≈ü
 FROM hasta
 JOIN muayene ON hasta.hasta_id = muayene.hasta_id
 JOIN doktor ON muayene.doktor_id = doktor.doktor_id
 GROUP BY doktor.ad;
 
---EN «OK HANG› ÷DEME DURUMU TERC›H ED›LM›ﬁT›R
-SELECT odeme_durumu, COUNT(odeme_durumu) AS ˆdeme_durumu_sayisi  FROM hasta
+--EN √áOK HANGƒ∞ √ñDEME DURUMU TERCƒ∞H EDƒ∞LMƒ∞≈ûTƒ∞R
+SELECT odeme_durumu, COUNT(odeme_durumu) AS √∂deme_durumu_sayisi  FROM hasta
 JOIN odeme ON hasta.hasta_id = odeme.hasta_id
 GROUP BY odeme_durumu
-ORDER BY ˆdeme_durumu_sayisi DESC;
+ORDER BY √∂deme_durumu_sayisi DESC;
 
---UZMANLIK ALANLARINA A›T RANDEVU SAYILARINI G÷STEREN SORGU 
-SELECT uzmanl˝k, COUNT(*) FROM doktor
+--UZMANLIK ALANLARINA Aƒ∞T RANDEVU SAYILARINI G√ñSTEREN SORGU 
+SELECT uzmanlik, COUNT(*) FROM doktor
 JOIN randevu ON doktor.doktor_id = randevu.doktor_id
-GROUP BY uzmanl˝k
+GROUP BY uzmanlik
 ORDER BY COUNT(*) DESC;
 
---HANG› TEDAV› ›«›N KA« FARKLI ›LA« TANIMLANMIﬁTIR
-SELECT tedavi, COUNT(*) FROM te˛his
-INNER JOIN hasta ON hasta.hasta_id=te˛his.hasta_id
+--HANGƒ∞ TEDAVƒ∞ ƒ∞√áƒ∞N KA√á FARKLI ƒ∞LA√á TANIMLANMI≈ûTIR
+SELECT tedavi, COUNT(*) FROM te≈ühis
+INNER JOIN hasta ON hasta.hasta_id=te≈ühis.hasta_id
 INNER JOIN ilac ON ilac.hasta_id = hasta.hasta_id
 GROUP BY tedavi
 ORDER BY COUNT(*) DESC;
 
---KART ›LE ÷DEME YAPAN HASTALAR
+--KART ƒ∞LE √ñDEME YAPAN HASTALAR
 SELECT hasta.ad, hasta.soyad
 FROM hasta
 JOIN odeme ON hasta.hasta_id = odeme.hasta_id
 WHERE odeme.odeme_tipi = 'kart';
 
-
---HANG› YAﬁ ARALI–I HANG› TEDAV›Y› OLUCAK HESAPLAYAN SORGU
+--HANGƒ∞ YA≈û ARALIƒûI HANGƒ∞ TEDAVƒ∞Yƒ∞ OLUCAK HESAPLAYAN SORGU
 SELECT CASE
-  WHEN YEAR(GETDATE()) - YEAR(hasta.dogum_tarihi) BETWEEN 19 AND 30 THEN 'GenÁ'
-  WHEN YEAR(GETDATE()) - YEAR(hasta.dogum_tarihi) BETWEEN 30 AND 50 THEN 'Yeti˛kin'
-  WHEN YEAR(GETDATE()) - YEAR(hasta.dogum_tarihi) BETWEEN 51 AND 65 THEN 'Orta Ya˛'
-  ELSE 'Ya˛l˝'
-END AS 'Ya˛ Grubu', te˛his.tedavi
-FROM te˛his
-JOIN hasta ON te˛his.hasta_id = hasta.hasta_id;
+  WHEN YEAR(GETDATE()) - YEAR(hasta.dogum_tarihi) BETWEEN 19 AND 30 THEN 'Gen√ß'
+  WHEN YEAR(GETDATE()) - YEAR(hasta.dogum_tarihi) BETWEEN 30 AND 50 THEN 'Yeti≈ükin'
+  WHEN YEAR(GETDATE()) - YEAR(hasta.dogum_tarihi) BETWEEN 51 AND 65 THEN 'Orta Ya≈ü'
+  ELSE 'Ya≈ülƒ±'
+END AS 'Ya≈ü Grubu', te≈ühis.tedavi
+FROM te≈ühis
+JOIN hasta ON te≈ühis.hasta_id = hasta.hasta_id;
 
---UZMANLI–I ORTODONT› OLAN DOKTORLARIN MUAYENEE ETT›–› HASTA SAYISI
+--UZMANLIƒûI ORTODONTƒ∞ OLAN DOKTORLARIN MUAYENEE ETTƒ∞ƒûƒ∞ HASTA SAYISI
 SELECT doktor.doktor_id, COUNT(hasta.hasta_id) AS hasta_sayisi
 FROM doktor
 JOIN hasta ON doktor.doktor_id = hasta.doktor_id
-WHERE doktor.uzmanl˝k = 'ortodonti'
+WHERE doktor.uzmanlik = 'ortodonti'
 GROUP BY doktor.doktor_id;
 
---BEL›RL› B›R DOKTORA A›T T‹M HASTALARIN L›STES›N› GET›R›R
+--BELƒ∞RLƒ∞ Bƒ∞R DOKTORA Aƒ∞T T√úM HASTALARIN Lƒ∞STESƒ∞Nƒ∞ GETƒ∞Rƒ∞R
 SELECT ad, soyad
 FROM hasta 
 INNER JOIN muayene  ON muayene.hasta_id = hasta.hasta_id
 WHERE muayene.doktor_id = 25;
 
---D›ﬁ «EK›M› TEDAV›S›N›N HANG› HASTALARA KA« KEZ UYGULANDI–INI G÷STER›R
-SELECT doktor.ad, doktor.soyad, SUM(CASE WHEN te˛his.tedavi = 'Di˛ Áekimi' THEN 1 ELSE 0 END) AS di˛_Áekimi_sayisi
+--Dƒ∞≈û √áEKƒ∞Mƒ∞ TEDAVƒ∞Sƒ∞Nƒ∞N HANGƒ∞ HASTALARA KA√á KEZ UYGULANDIƒûINI G√ñSTERƒ∞R
+SELECT doktor.ad, doktor.soyad, SUM(CASE WHEN te≈ühis.tedavi = 'Di≈ü √ßekimi' THEN 1 ELSE 0 END) AS di≈ü_√ßekimi_sayisi
 FROM doktor
-JOIN te˛his ON doktor.doktor_id = te˛his.doktor_id
+JOIN te≈ühis ON doktor.doktor_id = te≈ühis.doktor_id
 GROUP BY doktor.doktor_id, doktor.ad, doktor.soyad
-ORDER BY di˛_Áekimi_sayisi DESC;
+ORDER BY di≈ü_√ßekimi_sayisi DESC;
 
---BEL›RL› B›R ›LA« ›«›N RE«ETELEND›R›LEN HASTALARIN L›STELER›
+--BELƒ∞RLƒ∞ Bƒ∞R ƒ∞LA√á ƒ∞√áƒ∞N RE√áETELENDƒ∞Rƒ∞LEN HASTALARIN Lƒ∞STELERƒ∞
 SELECT ad, soyad
 FROM hasta 
 INNER JOIN recete  ON recete.hasta_id = hasta.hasta_id
 WHERE recete.ilac_id = 631;
 
-
---WHERE recete.ilac_id = 631;
---EN YAﬁLI HASTAYA BAKAN DOKTOR VE MUAYENE TAR›H›
+--EN YA≈ûLI HASTAYA BAKAN DOKTOR VE MUAYENE TARƒ∞Hƒ∞
 SELECT doktor.ad, doktor.soyad, doktor.doktor_id, muayene.muayene_tarihi
 FROM doktor 
 JOIN hasta  ON doktor.doktor_id = hasta.doktor_id
 JOIN muayene ON hasta.hasta_id = muayene.hasta_id
 WHERE hasta.dogum_tarihi = (SELECT MIN(dogum_tarihi) FROM hasta);
 
---EN GEN« OLAN HASTA VE ÷DEME DURUMUNU G÷STEREN SORGU 
+--EN GEN√á OLAN HASTA VE √ñDEME DURUMUNU G√ñSTEREN SORGU 
 SELECT odeme_durumu,hasta.ad,hasta.soyad
 FROM odeme 
 JOIN hasta ON odeme.hasta_id = hasta.hasta_id
 WHERE  hasta.dogum_tarihi = (SELECT MAX(dogum_tarihi) FROM hasta);
 
---AYNI C›NS›YETTE OLAN DOKTORLAR VE HASTALARI  
+--AYNI Cƒ∞NSƒ∞YETTE OLAN DOKTORLAR VE HASTALARI  
 SELECT hasta.ad, hasta.soyad, doktor.ad, doktor.soyad
 FROM hasta
 JOIN doktor ON hasta.cinsiyet = doktor.cinsiyet;
 
---ODEME DURUMU BEKLEN›YOR OLAN KA« HASTA VAR 
+--ODEME DURUMU BEKLENƒ∞YOR OLAN KA√á HASTA VAR 
 SELECT COUNT(*) AS hasta_sayisi
 FROM hasta
 WHERE EXISTS (SELECT * FROM odeme WHERE hasta.hasta_id = odeme.hasta_id AND odeme.odeme_durumu = 'Bekleniyor');
 
-
--- HANG› DOKTOR EN FAZLA RECETEY› YAZMIﬁTIR? 
+-- HANGƒ∞ DOKTOR EN FAZLA RECETEYƒ∞ YAZMI≈ûTIR? 
 SELECT doktor_id, COUNT (recete_id) AS recete_sayisi
 FROM recete
 GROUP BY doktor_id
 ORDER BY recete_sayisi DESC;
 
--- ADI  "Burak Ay" OLAN DOKTORUN MUAYENE ETT›–› T‹M HASTALARIN B›LG›LER›
+-- ADI  "Burak Ay" OLAN DOKTORUN MUAYENE ETTƒ∞ƒûƒ∞ T√úM HASTALARIN Bƒ∞LGƒ∞LERƒ∞
 SELECT * FROM hasta WHERE doktor_id IN (SELECT doktor_id FROM doktor WHERE ad = 'Burak' AND soyad = 'Ay');
 
---MAAﬁI 10000 ve 20000 ARASI OLAN VE UZMANLIK ALANI 'A˝z-Di˛ ve «ene Cerrahisi' OLAN DOKTORLAR K›MLER
+--MAA≈ûI 10000 ve 20000 ARASI OLAN VE UZMANLIK ALANI 'Aƒüƒ±z-Di≈ü ve √áene Cerrahisi' OLAN DOKTORLAR Kƒ∞MLER
 SELECT ad, soyad, doktor_maas
 FROM doktor
-WHERE doktor_maas BETWEEN 10000 AND 20000 AND uzmanl˝k = 'A˝z-Di˛ ve «ene Cerrahisi';
+WHERE doktor_maas BETWEEN 10000 AND 20000 AND uzmanlik = 'Aƒüƒ±z-Di≈ü ve √áene Cerrahisi';
 
---ORTODONT› ALANINDA UZMAN DOKTORLARIN SAYISI
+--ORTODONTƒ∞ ALANINDA UZMAN DOKTORLARIN SAYISI
 SELECT COUNT(hasta_id) AS hasta_sayisi
 FROM hasta
-WHERE doktor_id IN (SELECT doktor_id FROM doktor WHERE uzmanl˝k = 'Ortodonti');
+WHERE doktor_id IN (SELECT doktor_id FROM doktor WHERE uzmanlik = 'Ortodonti');
 
---UZMANLIK ALANI PROTEZ OLAN ERKEK DOKTORLARI GET›REN SORGU 
+--UZMANLIK ALANI PROTEZ OLAN ERKEK DOKTORLARI GETƒ∞REN SORGU 
 SELECT ad,soyad,doktor_id,cinsiyet
 FROM doktor
-WHERE uzmanl˝k='Protez' AND cinsiyet='E';
+WHERE uzmanlik='Protez' AND cinsiyet='E';
 
-SELECT * FROM doktor WHERE uzmanl˝k = 'Endodonti';
+SELECT * FROM doktor WHERE uzmanlik = 'Endodonti';
 
--- 11 kas˝m 2023 de randevusu olan t¸m hastalar
+-- 11 kasƒ±m 2023 de randevusu olan t√ºm hastalar
 SELECT hasta_id, ad, soyad, dogum_tarihi
 FROM hasta
 WHERE hasta_id IN (  SELECT hasta_id
                      FROM randevu
                      WHERE randevu_tarihi = '2023-11-29' );
 
---01 KASIM VE 30 KASIM ARASINDA OLAN T‹M RANDEVULARI VE TAR›HLER›N› G÷STER›R
+--01 KASIM VE 30 KASIM ARASINDA OLAN T√úM RANDEVULARI VE TARƒ∞HLERƒ∞Nƒ∞ G√ñSTERƒ∞R
 SELECT hasta.hasta_id, hasta.ad, hasta.soyad, hasta.dogum_tarihi, randevu.randevu_tarihi
 FROM hasta
 JOIN randevu ON hasta.hasta_id = randevu.hasta_id
@@ -215,147 +209,146 @@ SELECT COUNT(*) AS hasta_sayisi, cinsiyet
 FROM hasta
 GROUP BY cinsiyet;
 
--- HANG› ÷DEME T›P› EN «OK SE«›L›M›ﬁT›R
+-- HANGƒ∞ √ñDEME Tƒ∞Pƒ∞ EN √áOK SE√áƒ∞Lƒ∞Mƒ∞≈ûTƒ∞R
 SELECT odeme_tipi, COUNT(odeme_tipi) AS odeme_sayisi
 FROM odeme
 WHERE odeme_tipi IS NOT NULL
 GROUP BY odeme_tipi
 ORDER BY odeme_sayisi DESC;
 
--- SADECE 'Parasetamol' ETKEN MADDES›NE SAH›P ›LA«LAR
+-- SADECE 'Parasetamol' ETKEN MADDESƒ∞NE SAHƒ∞P ƒ∞LA√áLAR
 SELECT * FROM ilac WHERE etken_madde = 'Parasetamol';
 
--- ADI MERT OLAN DOKTORUN 1 G‹NDE KA« HASTAYA BAKTI–INI G÷STEREN SORGU
+-- ADI MERT OLAN DOKTORUN 1 G√úNDE KA√á HASTAYA BAKTIƒûINI G√ñSTEREN SORGU
 SELECT COUNT(hasta_id) AS hasta_sayisi
 FROM muayene
 WHERE doktor_id IN (SELECT doktor_id FROM doktor WHERE ad = 'Mert')
 AND muayene_tarihi = '2023-11-26';
 
--- HANG› HASTANIN EN «OK RANDEVUSU VAR?
+-- HANGƒ∞ HASTANIN EN √áOK RANDEVUSU VAR?
 SELECT hasta_id, COUNT(*) as randevu_sayisi
 FROM randevu
 GROUP BY hasta_id
 ORDER BY randevu_sayisi DESC;
 
--- HANG› DOKTORDAN EN AZ RANDEVU ALINMIﬁTIR?
+-- HANGƒ∞ DOKTORDAN EN AZ RANDEVU ALINMI≈ûTIR?
 SELECT doktor_id, COUNT(*) as randevu_sayisi
 FROM randevu
 GROUP BY doktor_id
 ORDER BY randevu_sayisi ASC;
 
---HANG› ETKEN MADDE EN «OK KULLANILMIﬁTIR
+--HANGƒ∞ ETKEN MADDE EN √áOK KULLANILMI≈ûTIR
 SELECT etken_madde, COUNT(*) AS sayisi FROM ilac
 GROUP BY etken_madde 
 ORDER BY COUNT(*) DESC;
 
---HANG› DOKTORUN EN «OK HASTAYI MUAYENE ETT›–›N› G÷STEREN SORGU           //COUNT(*) i˛levi, verilen s¸tunun deerlerinin say˝s˝n˝ dˆnd¸r¸r, bu nedenle her doktor iÁin kaÁ muayene olduunu sayar.
+--HANGƒ∞ DOKTORUN EN √áOK HASTAYI MUAYENE ETTƒ∞ƒûƒ∞Nƒ∞ G√ñSTEREN SORGU           //COUNT(*) i≈ülevi, verilen s√ºtunun de√∞erlerinin sayƒ±sƒ±nƒ± d√∂nd√ºr√ºr, bu nedenle her doktor i√ßin ka√ß muayene oldu√∞unu sayar.
 SELECT doktor_id, COUNT(*) AS hasta_sayisi
 FROM muayene
 GROUP BY doktor_id
 ORDER BY hasta_sayisi DESC;
 
---UZMANLIK ALANI ORTODONT› OLAN DOKTORUN MUAYENE ETT›–› HASTA SAYISI 3 OLAN DOKTORU GET›REN SORGU 
+--UZMANLIK ALANI ORTODONTƒ∞ OLAN DOKTORUN MUAYENE ETTƒ∞ƒûƒ∞ HASTA SAYISI 3 OLAN DOKTORU GET√ùREN SORGU 
 SELECT * FROM doktor
-WHERE uzmanl˝k = 'Ortodonti'
+WHERE uzmanlik = 'Ortodonti'
 AND doktor_id IN (SELECT doktor_id FROM muayene GROUP BY doktor_id HAVING COUNT(*) = 3);
 
---Hasta id=220 OLAN HASTANIN KULLANDI–I ›LACIN B›LG›LER›
+--Hasta id=220 OLAN HASTANIN KULLANDIƒûI ƒ∞LACIN Bƒ∞LGƒ∞LERƒ∞
 SELECT * FROM ilac WHERE hasta_id = 220;
 
---EN «OK HANG› TEDAV›N›N YAPILDI–I SORGUSU
-SELECT tedavi, COUNT(*) as tedavi_sayisi FROM te˛his
+--EN √áOK HANGƒ∞ TEDAVƒ∞Nƒ∞N YAPILDI√êI SORGUSU
+SELECT tedavi, COUNT(*) as tedavi_sayisi FROM te≈ühis
 GROUP BY tedavi
 ORDER BY tedavi_sayisi DESC;
 
---DOKTOR VE TEKN›SYENLER›N TOPLAM MAAﬁLARI VE ORTALAM MAAﬁLARI
+--DOKTOR VE TEKNƒ∞SYENLERƒ∞N TOPLAM MAA√ûLARI VE ORTALAM MAA≈ûLARI
 SELECT 'doktor' AS pozisyon, SUM (doktor_maas) AS toplam_maas, AVG (doktor_maas) AS ortalama_maas
 FROM doktor
 UNION
 SELECT 'teknisyen' AS pozisyon, SUM (teknisyen_maas) AS toplam_maas, AVG (teknisyen_maas) AS ortalama_maas
 FROM teknisyen;
 
--- MAAﬁI ERKEK DOKTORLARIN MAAﬁLARIN ORTALAMALARINDAN FAZLA OLAN KADIN DOKTORLAR
+-- MAA√ûI ERKEK DOKTORLARIN MAA≈ûLARIN ORTALAMALARINDAN FAZLA OLAN KADIN DOKTORLAR
 select ad,cinsiyet,soyad,doktor_maas  from doktor
 where cinsiyet='K'
 group by ad,cinsiyet,soyad,doktor_maas
 having doktor_maas > (Select avg(doktor_maas) as s from doktor where cinsiyet='E' );
 
--- TEL TEDAV›S› OLACAK HASTALARIN B›LG›LER›(cinsiyet, ad)
+-- TEL TEDAVƒ∞Sƒ∞ OLACAK HASTALARIN Bƒ∞LGƒ∞LERƒ∞(cinsiyet, ad)
 SELECT hasta.ad, hasta.cinsiyet
 FROM hasta
-WHERE hasta.hasta_id IN (SELECT te˛his.hasta_id FROM te˛his WHERE te˛his.tedavi = 'Tel Tedavisi');
+WHERE hasta.hasta_id IN (SELECT te≈ühis.hasta_id FROM te≈ühis WHERE te≈ühis.tedavi = 'Tel Tedavisi');
 
--- ADI Aleda OLAN DOKTORUN MAAﬁINI G÷STEREN SORGU
+-- ADI Aleda OLAN DOKTORUN MAA≈ûINI G√ñSTEREN SORGU
 SELECT doktor_maas
 FROM doktor
 WHERE ad = 'Aleda';
 
---BELL› B›R HASTANIN B›LG›LER›N› GET›R›R
+--BELLƒ∞ Bƒ∞R HASTANIN Bƒ∞LGƒ∞LERƒ∞Nƒ∞ GETƒ∞Rƒ∞R
 SELECT tc_kimlik,tel_no,dogum_tarihi
 FROM hasta
 WHERE ad = 'Kubilay' and cinsiyet ='E'
 AND soyad = 'Ova'
 
---HANG› DOKTORUN MAAﬁI EN Y‹KSEK VE EN D‹ﬁ‹KT‹R?
+--HANGƒ∞ DOKTORUN MAA≈ûI EN Y√úKSEK VE EN D√ú≈û√úKT√úR?
 SELECT doktor_id, doktor_maas
 FROM doktor
 WHERE doktor_maas = ( SELECT MAX (doktor_maas) FROM doktor);
 
-SELECT MIN (doktor_maas) AS en_d¸˛¸k_doktor_maas FROM doktor;
+SELECT MIN (doktor_maas) AS en_d√º√æ√ºk_doktor_maas FROM doktor;
 
---SENEM VE CENK'›N (DOKTORLAR) HANG› TEDAV›LER› YAPTIKLARINI G÷STEREN SORGU  
-SELECT * FROM te˛his WHERE doktor_id IN (SELECT doktor_id FROM doktor WHERE ad IN ('Senem', 'Cenk'));
+--SENEM VE CENK'ƒ∞N (DOKTORLAR) HANGƒ∞ TEDAVƒ∞LERƒ∞ YAPTIKLARINI G√ñSTEREN SORGU  
+SELECT * FROM te√æhis WHERE doktor_id IN (SELECT doktor_id FROM doktor WHERE ad IN ('Senem', 'Cenk'));
 
---EN YAﬁLI HASTANIN B›LG›LER›
+--EN YA≈ûLI HASTANIN Bƒ∞LGƒ∞LERƒ∞
 SELECT ad, soyad, dogum_tarihi
 FROM hasta
 WHERE dogum_tarihi = (SELECT MIN(dogum_tarihi) FROM hasta);
 
---EN GEN« HASTANIN B›LG›LER›
+--EN GEN√á HASTANIN Bƒ∞LGƒ∞LERƒ∞
 SELECT ad, soyad, dogum_tarihi
 FROM hasta
 WHERE dogum_tarihi = (SELECT MAX(dogum_tarihi) FROM hasta);
 
---EN Y‹KSEK MAAﬁI ALAN DOKTORUN UZMANLK ALANI NED›R
-SELECT uzmanl˝k, doktor_maas
+--EN Y√úKSEK MAA≈ûI ALAN DOKTORUN UZMANLK ALANI NEDƒ∞R
+SELECT uzmanlik, doktor_maas
 FROM doktor
 WHERE doktor_maas = (SELECT MAX(doktor_maas) FROM doktor);
 
-
---ETKEN MADDES› AYNI OLAN ›LA«LAR
+--ETKEN MADDESƒ∞ AYNI OLAN ƒ∞LA√áLAR
 SELECT ilac_id, ilac_ad, fiyat, son_kullanma_tarihi, etken_madde
 FROM ilac
 WHERE etken_madde IN (SELECT etken_madde FROM ilac GROUP BY etken_madde HAVING COUNT(*) > 1);
 
--- doktor_id =1 OLAN DOKTORUN AD VE SOYADINI G‹NCELLEMEK ›«›N KULLANILDI
+-- doktor_id =1 OLAN DOKTORUN AD VE SOYADINI G√úNCELLEMEK ƒ∞√áƒ∞N KULLANILDI
 UPDATE hasta
 SET ad = 'Kubilay', soyad ='Ova'
 WHERE hasta_id = 1;
 
---B›R DOKTORUN MAAﬁINI G‹NCELLEME
+--B√ùR DOKTORUN MAA≈ûINI G√úNCELLEME
 UPDATE doktor
 SET doktor_maas = 35500
 WHERE doktor_id = 1;
 
---F›YATI 100 TL'DEN AZ OLAN ›LA«LAR
+--F√ùYATI 100 TL'DEN AZ OLAN ƒ∞LA√áLAR
 SELECT ilac_ad, etken_madde,fiyat FROM ilac WHERE fiyat < 100.00;
 
--- TC K›ML›K NO'SU 10875639821 OLAN K›ﬁ›N›N B›LG›LER›N› G÷STEREN SORGU
+-- TC Kƒ∞MLƒ∞K NO'SU 10875639821 OLAN Kƒ∞≈ûƒ∞Nƒ∞N Bƒ∞LGƒ∞LERƒ∞Nƒ∞ G√ñSTEREN SORGU
 SELECT*FROM hasta
 WHERE tc_kimlik = 10875639821;
 
--- ADI KARYA OLAN HASTALARIN B›LG›LER›N› G÷STEREN SORGU
+-- ADI KARYA OLAN HASTALARIN Bƒ∞LGƒ∞LERƒ∞Nƒ∞ G√ñSTEREN SORGU
 SELECT * FROM hasta WHERE ad = 'Karya';
 
---20000 ‹ST‹NDE MAAﬁ ALAN KADIN DOKTORLAR
+--20000 √úST√úNDE MAA≈û ALAN KADIN DOKTORLAR
 SELECT ad, soyad,doktor_maas FROM doktor
 WHERE doktor_maas  > 20000 AND cinsiyet = 'K';
 
---9000 ALTINDA MAAﬁ ALAN ERKEK TEKN›SYENLER
+--9000 ALTINDA MAA≈û ALAN ERKEK TEKNƒ∞SYENLER
 SELECT ad, soyad,teknisyen_maas FROM teknisyen
 WHERE teknisyen_maas < 9000 AND cinsiyet = 'E';
 
---2. en y¸ksek maa˛ alan doktor
+--2. en y√ºksek maa≈ü alan doktor
 SELECT ad, soyad, doktor_maas FROM doktor
 WHERE doktor_maas = ( SELECT MAX (doktor_maas) FROM doktor WHERE doktor_maas NOT IN ( SELECT MAX (doktor_maas) FROM doktor));
 
@@ -364,13 +357,14 @@ from doktor
 WHERE cinsiyet = 'K' 
 ORDER BY doktor_maas  DESC;
 
---doktor_id=5 OLAN DOKTORUN MAAﬁINDAN DAHA Y‹KSEK MAAﬁ ALAN DOKTORLARIN ›S›MLER› 
+--doktor_id=5 OLAN DOKTORUN MAA≈ûINDAN DAHA Y√úKSEK MAA≈û ALAN DOKTORLARIN ƒ∞Sƒ∞MLERƒ∞ 
 SELECT ad,soyad
 FROM   doktor
 WHERE  doktor_maas > ALL ( SELECT doktor_maas
                            FROM   doktor
 					       WHERE  doktor_id = 5 );
---F›YATI 50TL DEN FAZLA OLUP SON KULLANMA TAR›H› '2023-01-01' VE '2023-12-31' TAR›HLER› ARASINDA OLAN ›LA«LAR
+
+--Fƒ∞YATI 50TL DEN FAZLA OLUP SON KULLANMA TARƒ∞Hƒ∞ '2023-01-01' VE '2023-12-31' TARƒ∞HLERƒ∞ ARASINDA OLAN ƒ∞LA√áLAR
 SELECT ilac_ad, fiyat,son_kullanma_tarihi FROM ilac WHERE fiyat > 50.00 AND son_kullanma_tarihi BETWEEN '2023-01-01' AND '2023-12-31';
 
 -- DOKTORLARA %10 ZAM YAPILIRSA
@@ -381,30 +375,30 @@ SET doktor_maas = doktor_maas * 1.1;
 --UZMANLIK ALANI PROTEZ OLAN DOKTORLARA %10 ZAM YAPILMASI
 UPDATE doktor
 SET doktor_maas = doktor_maas * 1.1
-WHERE uzmanl˝k = 'Protez';
+WHERE uzmanlik = 'Protez';
 SELECT *FROM doktor;
 
--- YAPILAN ZAM GER› ALINIRSA 
+-- YAPILAN ZAM GERƒ∞ ALINIRSA 
 UPDATE doktor
 SET doktor_maas = doktor_maas / 1.1;
 SELECT*FROM doktor;
 
--- SOY›SM›N›N ›LK ›K› HARF› 'ER' OLAN HASTALAR
+-- SOYƒ∞SMƒ∞Nƒ∞N ƒ∞LK ƒ∞Kƒ∞ HARFƒ∞ 'ER' OLAN HASTALAR
 SELECT *FROM hasta
 WHERE soyad LIKE 'ER%';
 
---›LA« ADINDA VEYA ETKEN MADDES›NDE 'PRO' VEYA 'P' OLAN ›LA«LAR
+--ƒ∞LA√á ADINDA VEYA ETKEN MADDESƒ∞NDE 'PRO' VEYA 'P' OLAN ƒ∞LA√áLAR
 SELECT ilac_ad, hasta_id,etken_madde FROM ilac WHERE ilac_ad LIKE '%pro%' OR etken_madde LIKE 'P%';
 
---SON KULLANMA TAR›H› '2024-05-01' VE '2024-09-30' VEYA '2025-05-01' VE '2025-09-30' TAR›HLER› ARASINDA OLAN ›LA«LAR
+--SON KULLANMA TARƒ∞Hƒ∞ '2024-05-01' VE '2024-09-30' VEYA '2025-05-01' VE '2025-09-30' TARƒ∞HLERƒ∞ ARASINDA OLAN ƒ∞LA√áLAR
 SELECT ilac_ad, fiyat,son_kullanma_tarihi FROM ilac WHERE son_kullanma_tarihi BETWEEN '2024-05-01' AND '2024-09-30' OR son_kullanma_tarihi BETWEEN '2025-05-01' AND '2025-09-30';
 
---SIRAYLA DOKTOR VE TEKN›SYENLER 
+--SIRAYLA DOKTOR VE TEKNƒ∞SYENLER 
 SELECT ad, soyad, 'doktor' FROM doktor
 UNION
 SELECT ad, soyad, 'teknisyen' FROM teknisyen;
 
--- DOKTORLARNI MAAﬁLARININ ORTALAMASI
+-- DOKTORLARNI MAA≈ûLARININ ORTALAMASI
 SELECT AVG (doktor_maas) AS ortalama_maas
 FROM doktor;
 
@@ -418,11 +412,11 @@ WHERE doktor_maas = ( SELECT MIN (doktor_maas) FROM doktor);
 
 SELECT cinsiyet
 FROM doktor
-ORDER BY doktor_maas DESC;                  --ORDER BY ifadesi, sat˝rlar˝n nas˝l s˝ralanaca˝n˝ belirtir. S˝ra artan (ASC) veya azalan (DESC) olabilir. Varsay˝lan olarak, s˝ra artand˝r.
+ORDER BY doktor_maas DESC;                  --ORDER BY ifadesi, satƒ±rlarƒ±n nasƒ±l sƒ±ralanacaƒüƒ±nƒ± belirtir. Sƒ±ra artan (ASC) veya azalan (DESC) olabilir. Varsay√Ωlan olarak, s√Ωra artand√Ωr.
 
 SELECT ad, soyad, doktor_maas FROM doktor;
 
--- TEKN›SYENLER›N EN D‹ﬁ‹K VE EN Y‹KSEK  MAAﬁINI SORGULAR
+-- TEKNƒ∞SYENLERƒ∞N EN D√ú≈û√úK VE EN Y√úKSEK  MAA≈ûINI SORGULAR
 SELECT teknisyen_id,teknisyen_maas,ad,soyad
 FROM teknisyen
 WHERE teknisyen_maas=(SELECT MAX(teknisyen_maas)FROM teknisyen);
@@ -431,37 +425,37 @@ SELECT teknisyen_id,teknisyen_maas,ad,soyad
 From teknisyen
 WHERE teknisyen_maas=(SELECT MIN(teknisyen_maas)FROM teknisyen );
 
-SELECT MAX(teknisyen_maas) AS en_y¸ksek_teknisyen_maas, MIN(teknisyen_maas) AS en_d¸˛¸k_teknisyen_maas
+SELECT MAX(teknisyen_maas) AS en_y√ºksek_teknisyen_maas, MIN(teknisyen_maas) AS en_d√º≈ü√ºk_teknisyen_maas
 FROM teknisyen;
 
 SELECT AVG(teknisyen_maas) AS erkek_teknisyen_maas_ort
 FROM teknisyen
 WHERE cinsiyet = 'E';
 
--- DOKTOR OLUP KADIN VE EN Y‹KSEK MAAﬁ ALAN K›M ? 
+-- DOKTOR OLUP KADIN VE EN Y√úKSEK MAA√û ALAN Kƒ∞M ? 
 SELECT doktor_id, ad, soyad, doktor_maas
 FROM doktor
 WHERE cinsiyet = 'K' AND doktor_maas = (	SELECT MAX (doktor_maas)
-											FROM doktor
-											WHERE cinsiyet = 'K' );
+						FROM doktor
+						WHERE cinsiyet = 'K' );
 
---ERKEK TEKN›SYENLERDEN EN Y‹KSEK MAAﬁI ALAN K›M ?
+--ERKEK TEKNƒ∞SYENLERDEN EN Y√úKSEK MAA≈ûI ALAN Kƒ∞M ?
 SELECT teknisyen_id, ad, soyad, teknisyen_maas
 FROM teknisyen 
 WHERE cinsiyet = 'E' AND teknisyen_maas = (
-											SELECT MIN(teknisyen_maas)
-											FROM teknisyen 
-											WHERE cinsiyet = 'E' );
+						SELECT MIN(teknisyen_maas)
+						FROM teknisyen 
+						WHERE cinsiyet = 'E' );
 
 
---T‹M MAAﬁLAR VE FARKLI MAAﬁLARI G÷STEREN SORGU 
+--T√úM MAA≈ûLAR VE FARKLI MAA≈ûLARI G√ñSTEREN SORGU 
 SELECT ALL teknisyen_maas
 FROM  teknisyen;
 
 SELECT DISTINCT teknisyen_maas 
 FROM teknisyen;
 
--- DOKTORLAR VE MUAYENE ETT›KLER› HASTA SAYILARINI GET›REN SORGU  (SUNUM YAPARKEN SORDU–UNUZ VE YAPTI–IM SORGU)
+-- DOKTORLAR VE MUAYENE ETTƒ∞KLERƒ∞ HASTA SAYILARINI GETƒ∞REN SORGU  
 SELECT doktor.ad, COUNT(*)  AS Muayene_sayisi
 FROM hasta
 JOIN muayene ON hasta.hasta_id = muayene.hasta_id
@@ -469,9 +463,9 @@ JOIN doktor ON muayene.doktor_id = doktor.doktor_id
 GROUP BY doktor.ad
 ORDER BY Muayene_sayisi DESC;
 
---DOLGU TEDAV›S› OLAN HASTALAIN ADLARI VE HASTAYA VER›LEN ›LA«LAR (AYNI HASTA B›RDEN FAZLA ›LA« ALAB›L›R) (SUNUM ESNASINDA SORDU–UNUZ FAKAT YAPAMADI–IM SORGU)
+--DOLGU TEDAVƒ∞Sƒ∞ OLAN HASTALAIN ADLARI VE HASTAYA VERƒ∞LEN ƒ∞LA√áLAR (AYNI HASTA Bƒ∞RDEN FAZLA ƒ∞LA√á ALABƒ∞Lƒ∞R) 
 SELECT ad, soyad,ilac.ilac_ad
 FROM hasta 
-INNER JOIN te˛his ON te˛his.hasta_id = hasta.hasta_id
+INNER JOIN te≈ühis ON te≈ühis.hasta_id = hasta.hasta_id
 INNER JOIN ilac ON ilac.hasta_id = hasta.hasta_id
-WHERE te˛his.tedavi='dolgu tedavisi'
+WHERE te≈ühis.tedavi='dolgu tedavisi'
